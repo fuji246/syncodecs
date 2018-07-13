@@ -777,7 +777,7 @@ protected:
      * Holds a pointer to the inner codec passed in the constructor. This class takes ownership
      * of the pointed object, and will free the memory upon destruction.
      */
-    std::auto_ptr<Codec> m_innerCodec;
+    std::unique_ptr<Codec> m_innerCodec;
     unsigned int m_overhead; /**< Stores the per-packet overhead. */
     std::vector<uint8_t> m_bytesToSend; /**< Bytes not yet sent from current inner frame. */
     double m_secsToNextFrame; /**< Seconds left until the next inner frame. */
@@ -1089,14 +1089,14 @@ protected:
  *     const unsigned int slow1 = 100;
  *     std::cout << "  Perfect codec. "
  *               << slow1 << "x slower:" << std::endl;
- *     std::auto_ptr<syncodecs::Codec> codec1(new syncodecs::PerfectCodec(MAX_PKT_SIZE));
+ *     std::unique_ptr<syncodecs::Codec> codec1(new syncodecs::PerfectCodec(MAX_PKT_SIZE));
  *     playCodec(*codec1, 10, 200, slow1);
  *
  *     const unsigned int slow2 = 50;
  *     std::cout << std::endl << std::endl;
  *     std::cout << "  Simple fps-based codec (unwrapped). "
  *               << slow2 << "x slower:" << std::endl;
- *     std::auto_ptr<syncodecs::Codec> codec2(new syncodecs::SimpleFpsBasedCodec(30.));
+ *     std::unique_ptr<syncodecs::Codec> codec2(new syncodecs::SimpleFpsBasedCodec(30.));
  *     playCodec(*codec2, 5, 20, slow2);
  *
  *     const unsigned int slow3 = 50;
@@ -1104,7 +1104,7 @@ protected:
  *     std::cout << "  Simple fps-based codec (wrapped in the shaped packetizer). "
  *               << slow3 << "x slower:" << std::endl;
  *     syncodecs::Codec* inner3 = new syncodecs::SimpleFpsBasedCodec(30.);
- *     std::auto_ptr<syncodecs::Codec> codec3(new syncodecs::ShapedPacketizer(inner3, MAX_PKT_SIZE));
+ *     std::unique_ptr<syncodecs::Codec> codec3(new syncodecs::ShapedPacketizer(inner3, MAX_PKT_SIZE));
  *     playCodec(*codec3, 10, 200, slow3);
  *
  *     const unsigned int slow4 = 5;
@@ -1112,7 +1112,7 @@ protected:
  *     std::cout << "  Simple content sharing codec (wrapped in the shaped packetizer). "
  *               << slow4 << "x slower:" << std::endl;
  *     syncodecs::Codec* inner4 = new syncodecs::SimpleContentSharingCodec(5., 800);
- *     std::auto_ptr<syncodecs::Codec> codec4(new syncodecs::ShapedPacketizer(inner4, MAX_PKT_SIZE));
+ *     std::unique_ptr<syncodecs::Codec> codec4(new syncodecs::ShapedPacketizer(inner4, MAX_PKT_SIZE));
  *     playCodec(*codec4, 50, 500, slow4);
  *
  *     return 0;
@@ -1137,7 +1137,7 @@ protected:
  * #include <iterator>
  *
  * #define MAX_PKT_SIZE 1000 // bytes
- * #define AUTOPTR(x) std::auto_ptr<syncodecs::Codec>((x))
+ * #define AUTOPTR(x) std::unique_ptr<syncodecs::Codec>((x))
  * #define TRACES_DIR_PATH "video_traces/chat_firefox_h264"
  * #define TRACES_FILE_PREFIX "chat"
  *
@@ -1166,7 +1166,7 @@ protected:
  *     syncodecs::Codec* inner1 = new syncodecs::StatisticsCodec(25.);
  *     syncodecs::Codec* inner2 = new syncodecs::HybridCodec(
  *                                     TRACES_DIR_PATH, TRACES_FILE_PREFIX, 25.);
- *     std::auto_ptr<syncodecs::Codec> codecs[] = { AUTOPTR(inner0),
+ *     std::unique_ptr<syncodecs::Codec> codecs[] = { AUTOPTR(inner0),
  *                                                  AUTOPTR(inner1),
  *                                                  AUTOPTR(inner2)
  *                                                };
